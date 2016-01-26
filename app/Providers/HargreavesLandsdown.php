@@ -91,9 +91,9 @@ class HargreavesLandsdown extends Provider {
             $changeDirection = 'up';
         }
         return [
-            'sellPrice'     => trim($crawler->filter('span.bid')->first()->text(),'$£p'),
-            'lastPrice'     => trim($crawler->filter('span.ask')->first()->text(),'$£p'),
-            'lastChange'    => trim($change->text(),"\r\n ()%"),
+            'sellPrice'     => $this->plainNumber($crawler->filter('span.bid')->first()->text()),
+            'lastPrice'     => $this->plainNumber($crawler->filter('span.ask')->first()->text()),
+            'lastChange'    => $this->plainNumber($change->text()),
             'lastDirection' => $changeDirection
         ];
     }

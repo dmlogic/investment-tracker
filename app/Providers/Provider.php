@@ -17,4 +17,9 @@ abstract class Provider {
         $this->connector = new Client();
     }
 
+    protected function plainNumber($value)
+    {
+        return trim(preg_replace( '/[^0-9.]/', '', $value ));
+    }
+
 }

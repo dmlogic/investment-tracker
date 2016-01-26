@@ -77,9 +77,9 @@ class Fidelity extends Provider {
             $changeDirection = 'down';
         }
 
-        $change = trim(preg_replace( '/[^0-9.]/', '', $change->text()));
+        $change = $this->plainNumber( $change->text() );
         $price = $crawler->filter('.ofLikeComponent .ofMedium strong')->first()->text();
-        $price = trim(preg_replace( '/[^0-9.]/', '', $price ));
+        $price = $this->plainNumber( $price ) * 100;
         return [
             'sellPrice'     => $price,
             'lastPrice'     => $price,
