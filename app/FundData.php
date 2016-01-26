@@ -51,7 +51,7 @@ class FundData {
     private function getValue($data)
     {
         $value = $data->units_held * $data->sellPrice;
-        if($data->currency == 'pence') {
+        if($data->currency == 'GBP') {
             return $value;
         }
 

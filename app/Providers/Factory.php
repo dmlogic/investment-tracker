@@ -10,6 +10,9 @@ class Factory {
             case 'hl':
                 return new HargreavesLandsdown($fund);
                 break;
+            case 'fid':
+                return new Fidelity($fund);
+                break;
             default:
                 throw new \Exception('Invalid provider');
         }

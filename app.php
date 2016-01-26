@@ -25,8 +25,17 @@ $app->get('/fund/{group}/{fund}', function ($request, $response,$args) {
     return $response->withJson( $this->fundData->get($args['group'],$args['fund']) );
 });
 $app->get('/debug', function() {
-    $converter = new App\CurrencyConverter('USD','GBP');
-    dd($converter->convert(100));
+    $fund = [
+                'name'            => 'Fidelity Index UK Fund P-Acc',
+                'type'            => 'fund',
+                'cost'            => 10780,
+                'units_held'      => 12529.12,
+                'provider'        => 'fid',
+                'url'             => 'https://www.fidelity.co.uk/fund-supermarket/Fidelity-Index-UK-Fund-P-Acc-GB00BJS8SF95',
+                'lookup_currency' => 'GBP',
+            ];
+    $pro = new App\Providers\Fidelity($fund);
+    dd($pro->getData());
 });
 
 function dd($var) {

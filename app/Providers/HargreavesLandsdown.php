@@ -14,11 +14,6 @@ class HargreavesLandsdown extends Provider {
     const DATA_URL = 'http://webfund6.financialexpress.net/clients/Hargreaves/Webservices/Charting.asmx';
 
     /**
-     * Give them something plausible
-     */
-    const USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:45.0) Gecko/20100101 Firefox/45.0';
-
-    /**
      * Data about the investment being parsed
      * @var array
      */
