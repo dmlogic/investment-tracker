@@ -8,6 +8,7 @@
     <title>Investment peformance</title>
 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet">
 
   </head>
 

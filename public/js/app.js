@@ -20,32 +20,40 @@ formatNumber = function(n) {
 renderFund = function(parent,data) {
     parent.addClass(data.lastDirection);
 
-    changeStr = '£'+formatNumber(data.lastPrice);
+    changeStr = '<strong>'+formatNumber(data.lastPrice)+'</strong>';
     if(data.lastDirection) {
-        changeStr += ' ('+data.lastChange+')';
+        changeStr += ' ('+data.lastChange+'%)';
     }
     parent.find('.last-price').html(changeStr);
-    valueStr = '£'+formatNumber(data.value)+'<br>(<span class="profit';
+    valueStr = '£'+formatNumber(data.value)+'<br><span class="profit';
     profit = parseFloat(data.profit);
     if(profit < 1) {
         profit = profit * -1;
-        valueStr += ' loss">-';
+        valueStr += ' loss">(-';
     } else {
-        valueStr += '">';
+        valueStr += '">(';
     }
-    valueStr += '£'+formatNumber(profit)+'</span>)'
-    console.log('profit: '+profit);
+    valueStr += '£'+formatNumber(profit)+')</span>'
     parent.find('.value').html(valueStr);
-    if(typeof(data.m3) != "undefined") {
-        m3 = formatNumber(data.m3)+'%';
-        m6 = formatNumber(data.m6)+'%';
-        m12 = formatNumber(data.m12)+'%';
-    } else {
-        m3 = m6 = m12 = '-';
+    parent.find('.three-months').html(renderPerformance(data.m3));
+    parent.find('.six-months').html(renderPerformance(data.m6));
+    parent.find('.twelve-months').html(renderPerformance(data.m12));
+}
+
+renderPerformance = function(value) {
+    if(typeof(value) == "undefined") {
+        return '-';
     }
-    parent.find('.three-months').html(m3);
-    parent.find('.six-months').html(m6);
-    parent.find('.twelve-months').html(m12);
+
+    value = parseFloat(value);
+    if(value < 0) {
+        cls = 'performance-down';
+    } else {
+        cls = 'performance-up'
+    }
+
+    str = '<span class="'+cls+'">'+formatNumber(value)+'%</span>';
+    return str;
 }
 
 $('.fund-row').each(function(){

@@ -1,0 +1,21 @@
+.loading small {
+    background-image:url(../images/loading.svg);
+    background-repeat:no-repeat;
+    padding-left:50px;
+    color:#b0b0b0;
+}
+.last-price {
+    color:#4baac7;
+}
+
+.performance-up,
+.profit,
+.up .last-price {
+    color:#00bb01;
+}
+
+.performance-down,
+.profit.loss,
+.down .last-price {
+    color:#c21a18;
+}

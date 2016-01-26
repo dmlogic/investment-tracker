@@ -20,10 +20,10 @@
                 <td><a href="<?php echo $fund['url'] ?>" target="_blank"><?php echo $fund['name'] ?></a></td>
                 <td class="last-price"><small>loading...</small></td>
                 <td class="cost">£<?php echo number_format($fund['cost'],2) ?></td>
-                <td class="value"><small>loading...</small></td>
-                <td class="three-months"><small>loading...</small></td>
-                <td class="six-months"><small>loading...</small></td>
-                <td class="twelve-months"><small>loading...</small></td>
+                <td class="value"></td>
+                <td class="three-months"></td>
+                <td class="six-months"></td>
+                <td class="twelve-months"></td>
             </tr>
         <?php endforeach; ?>
         </tbody>
