@@ -19,3 +19,31 @@
 .down .last-price {
     color:#c21a18;
 }
+.fund-name {
+    width:30%;
+}
+.value-heading {
+    text-align: center;
+}
+.table td.value-cell {
+    text-align: right;
+    padding-right:3%;
+}
+.table th.header {
+    background-image: url(../images/sort.svg);
+    background-repeat: no-repeat;
+    background-position: center right;
+    cursor: pointer;
+}
+.table th.headerSortUp {
+    background-image: url(../images/sort-asc.svg);
+}
+.table th.headerSortDown {
+    background-image: url(../images/sort-desc.svg);
+}
+.group-heading {
+    margin-top:30px;
+}
+.group-summary {
+    display:none;
+}

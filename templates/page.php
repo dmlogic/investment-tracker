@@ -16,7 +16,7 @@
 
     <div class="container-fluid">
 
-        <h1>Investment performance</h1>
+        <h1 class="display-4">Investment performance</h1>
 
         <?php echo $this->section('content') ?>
 
@@ -24,6 +24,7 @@
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/js/jquery.tablesorter.js"></script>
     <script src="/js/app.js"></script>
   </body>
 </html>

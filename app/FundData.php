@@ -44,7 +44,7 @@ class FundData {
             $data->lastChange = '-'.$data->lastChange;
         }
         $data->value = $value;
-        $data->profit = $data->cost - $data->value;
+        $data->profit = $data->value - $data->cost;
         return $data->getAll();
     }
 
