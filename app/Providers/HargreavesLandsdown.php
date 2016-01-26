@@ -46,9 +46,9 @@ class HargreavesLandsdown extends Provider {
         $output->units_held = $this->investment['units_held'];
 
         if($pastData) {
-            $output->set('3months', $pastData['P3']);
-            $output->set('6months', $pastData['P6']);
-            $output->set('12months', $pastData['P12']);
+            $output->set('m3', $pastData['P3']);
+            $output->set('m6', $pastData['P6']);
+            $output->set('m12', $pastData['P12']);
         }
 
         return $output;
@@ -87,7 +87,13 @@ class HargreavesLandsdown extends Provider {
     {
         $crawler = new Crawler($html);
         $change = $crawler->filter('.change-percent')->first();
-        $changeDirection = (false === strpos($change->attr('class'), 'positive') ) ? 'down' : 'up';
+        if(0 === strpos($change->attr('class'), 'positive') ) {
+            $changeDirection = 'up';
+        } elseif(0 === strpos($change->attr('class'), 'nochange') ) {
+            $changeDirection = '';
+        } else {
+            $changeDirection = 'up';
+        }
         return [
             'sellPrice'     => trim($crawler->filter('span.bid')->first()->text(),'$£p'),
             'lastPrice'     => trim($crawler->filter('span.ask')->first()->text(),'$£p'),
