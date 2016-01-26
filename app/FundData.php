@@ -36,7 +36,7 @@ class FundData {
     {
         $provider = Factory::make($fund);
         $data = $provider->getData();
-        $value = $data->units_held * $data->sellPrice;
+        $value = $this->getValue($data);
         if($data->type === 'fund') {
             $value = $value /100;
         }
@@ -46,6 +46,17 @@ class FundData {
         $data->value = $value;
         $data->profit = $data->value - $data->cost;
         return $data->getAll();
+    }
+
+    private function getValue($data)
+    {
+        $value = $data->units_held * $data->sellPrice;
+        if($data->currency == 'pence') {
+            return $value;
+        }
+
+        $convertor = new CurrencyConverter($data->currency,'GBP');
+        return $convertor->convert($value);
     }
 
 }

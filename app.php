@@ -24,6 +24,10 @@ $app->get('/', function ($request, $response) {
 $app->get('/fund/{group}/{fund}', function ($request, $response,$args) {
     return $response->withJson( $this->fundData->get($args['group'],$args['fund']) );
 });
+$app->get('/debug', function() {
+    $converter = new App\CurrencyConverter('USD','GBP');
+    dd($converter->convert(100));
+});
 
 function dd($var) {
     dc($var);

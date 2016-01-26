@@ -40,9 +40,10 @@ class HargreavesLandsdown extends Provider {
         $pastData = $this->getXmlData();
 
         $output = new DataItem($lastTrade);
-        $output->type = $this->investment['type'];
-        $output->name = $this->investment['name'];
-        $output->cost = $this->investment['cost'];
+        $output->type       = $this->investment['type'];
+        $output->name       = $this->investment['name'];
+        $output->cost       = $this->investment['cost'];
+        $output->currency   = $this->investment['lookup_currency'];
         $output->units_held = $this->investment['units_held'];
 
         if($pastData) {
