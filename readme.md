@@ -14,3 +14,5 @@ Originally made to view an overall summary of ISA funds held at [Hargreaves Land
 Any values shown are approximate. Remember to check the actual broker website when making transaction decisions.
 
 Automatic conversion is attempted from anything that isn't GBP, but it won't be as accurate as the fund broker.
+
+The `price_units` field in the `funds` table can be used to adjust fund invetment value calculation where the crawled price is in a different unit.
