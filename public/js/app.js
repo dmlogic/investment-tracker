@@ -1,5 +1,5 @@
 loadFund = function(parent) {
-    url = '/fund/'+parent.data('group-id')+'/'+parent.data('fund-id')
+    url = '/group/'+parent.data('group-id')+'/fund/'+parent.data('fund-id')
     $.ajax({
         url: url,
         context: parent,
@@ -18,11 +18,11 @@ formatNumber = function(n) {
 }
 
 renderFund = function(parent,data) {
-    parent.addClass(data.lastDirection);
+    parent.addClass(data.last_direction);
 
-    changeStr = '<strong>'+formatNumber(data.lastPrice)+'</strong>';
-    if(data.lastDirection) {
-        changeStr += ' ('+data.lastChange+'%)';
+    changeStr = '<strong>'+formatNumber(data.last_price)+'</strong>';
+    if(data.last_direction) {
+        changeStr += ' ('+data.last_change+'%)';
     }
     parent.find('.last-price').html(changeStr);
     valueStr = '£'+formatNumber(data.value)+'<br><span class="profit';

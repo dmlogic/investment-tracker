@@ -5,9 +5,12 @@ Originally made to view an overall summary of ISA funds held at [Hargreaves Land
 ## Installation
 
 * Run `composer install`
-* Copy `config/funds.sample.php` to `config/funds.php` and complete your data
-* Fire up a webserver from the `public` folder and visit with your browser
+* Create `groups.csv`, `funds.csv` and `users.csv` in `database/seeds/csv` based on samples provided
+* `php artisan migrate:refresh --seed`
+* `php artisan server` and you're away
 
 ## Currency issues
 
-As this was made for HL, most pricing is looked up in UK pence which should have the label 'pence' in your config file. Conversion of investment totals for other currencies should work fine and is done via [fixer.io](http://fixer.io/)
+Any values shown are approximate. Remember to check the actual broker website when making transaction decisions.
+
+Automatic conversion is attempted from anything that isn't GBP, but it won't be as accurate as the fund broker.
