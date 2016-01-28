@@ -9,25 +9,14 @@ use Symfony\Component\DomCrawler\Crawler;
 class HargreavesLandsdown extends Broker {
 
     /**
-     * Where to get historical change data from
+     * Where to get historical chart data from
      */
     const DATA_URL = 'http://webfund6.financialexpress.net/clients/Hargreaves/Webservices/Charting.asmx';
 
     /**
-     * Data about the investment being parsed
-     * @var array
-     */
-    protected $investment;
-
-    public function __construct(array $investment) {
-        parent::__construct();
-        $this->investment = $investment;
-    }
-
-    /**
-     * Public interface to get data
+     * Starts the crawl
      *
-     * @return DataItem
+     * @return void
      */
     protected function lookupData()
     {
@@ -54,7 +43,7 @@ class HargreavesLandsdown extends Broker {
             'headers' => [
                 'Host'            => 'www.hl.co.uk',
                 'User-Agent'      => static::USER_AGENT,
-                'Accept'          => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Accept'          => static::ACCEPT,
                 'Accept-Language' => 'en-US,en;q=0.5',
                 'DNT'             =>  '1',
                 'Connection'      => 'keep-alive',
@@ -62,15 +51,15 @@ class HargreavesLandsdown extends Broker {
         ];
 
         $response = $this->connector->get($this->investment['url'],$options);
-        $html = $response->getBody()->__toString();
+        $html     = $response->getBody()->__toString();
         $this->parseHTML($html);
     }
 
     /**
      * Pick the bits we want out of the HL markup
+     * Not pretty, but neither is markup
      *
      * @param  string $html
-     * @return array
      */
     protected function parseHTML($html)
     {
@@ -122,6 +111,12 @@ class HargreavesLandsdown extends Broker {
         $this->liveData->set('m12', $pastData['P12']);
     }
 
+    /**
+     * Clean some SOAP out of the returned XML and then parse it
+     *
+     * @param  string $xml
+     * @return SimpleXMLElement
+     */
     protected function getResponseXml($xml)
     {
         $find = ['<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body>','</soap:Body></soap:Envelope>'];

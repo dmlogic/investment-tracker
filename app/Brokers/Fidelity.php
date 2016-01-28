@@ -8,21 +8,11 @@ use Symfony\Component\DomCrawler\Crawler;
 class Fidelity extends Broker {
 
     /**
-     * Data about the investment being parsed
-     * @var array
-     */
-    protected $investment;
-
-    public function __construct(array $investment) {
-        parent::__construct();
-        $this->investment = $investment;
-    }
-
-    /**
-     * Public interface to get data
+     * Starts the crawl
      *
+     * @return void
      */
-    public function lookupData()
+    protected function lookupData()
     {
         $this->liveData = new DataItem;
         $this->liveData->type       = $this->investment['type'];
@@ -36,7 +26,7 @@ class Fidelity extends Broker {
     }
 
     /**
-     * Crawl the HL website to pick out recent trade data
+     * Crawl the Fidelity website to pick out recent trade data
      *
      */
     protected function getCrawledData()
@@ -58,7 +48,8 @@ class Fidelity extends Broker {
     }
 
     /**
-     * Pick the bits we want out of the HL markup
+     * Pick the bits we want out of the Fidelity markup
+     * which is extra special
      *
      * @param  string $html
      */
@@ -74,7 +65,7 @@ class Fidelity extends Broker {
 
         $change = $this->plainNumber( $change->text() );
         $price = $crawler->filter('.ofLikeComponent .ofMedium strong')->first()->text();
-        $price = $this->plainNumber( $price ) * 100;
+        $price = $this->plainNumber( $price );
 
         $this->liveData->sell_price     = $price;
         $this->liveData->last_price     = $price;
