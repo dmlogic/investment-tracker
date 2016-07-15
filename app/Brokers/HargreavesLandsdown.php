@@ -29,6 +29,10 @@ class HargreavesLandsdown extends Broker {
         $this->liveData->units_held = $this->investment['units_held'];
 
         $this->getCrawledData();
+
+        if(!$this->investment['chart_code']) {
+            return;
+        }
         $this->getXmlData();
 
     }
