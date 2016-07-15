@@ -17,6 +17,6 @@ class Group extends Model
 
     public function funds($orderBy = 'name')
     {
-        return $this->hasMany('App\Models\Fund')->orderBy($orderBy);
+        return $this->hasMany('App\Models\Fund')->whereNull('disposed_at')->orderBy($orderBy);
     }
 }

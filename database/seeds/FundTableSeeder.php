@@ -28,6 +28,7 @@ class FundTableSeeder extends Seeder
                 'price_units' => $fund[8],
                 'url'         => $fund[9],
                 'chart_code'  => $fund[10],
+                'disposed_at' => ($fund[12]) ? $fund[12] : null,
             ]);
         }
     }
