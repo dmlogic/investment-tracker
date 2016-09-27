@@ -1,6 +1,0 @@
-/vendor
-/database/database.sqlite
-/database/seeds/csv/groups.csv
-/database/seeds/csv/funds.csv
-/database/seeds/csv/users.csv
-.env

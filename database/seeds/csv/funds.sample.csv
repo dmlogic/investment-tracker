@@ -1,3 +1,0 @@
-group_id,name,type,cost_price,units_held,sale_price,broker,currency,price_units,url,chart_code,purchased_at,disposed_at
-1,Alphabet Inc (GOOG),share,100,20,,hl,USD,1,http://www.hl.co.uk/shares/shares-search-results/a/alphabet-inc-npv-a/share-charts,,,
-2,Standard Life UK Equity Unconstrained Institutional Class - Accumulation (GBP),fund,100,50,,hl,GBP,100,"http://www.hl.co.uk/funds/fund-discounts,-prices--and--factsheets/search-results/s/standard-life-inv-uk-equity-unconstrained-inst-accumulation/charts",FTP12,,
