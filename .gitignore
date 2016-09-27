@@ -1,0 +1,6 @@
+*.sql
+environment.php
+todo.txt
+vendor
+craft/app
+craft/storage

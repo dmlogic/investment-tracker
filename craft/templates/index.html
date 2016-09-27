@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Investment peformance</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <div class="container-fluid">
+
+        <h1 class="display-4">Investment performance</h1>
+
+        {% for group in craft.entries.section('groups') %}
+        {% set funds = craft.entries.section('investments').relatedTo(group) %}
+            <h2 class="group-heading">{{group.title}}</h2>
+            <div class="group-summary">
+                <p>Total group value: <strong class="group-value">{{group.balance | currency('GBP') }}</strong></p>
+                <p>Total group profit: <strong class="group-profit"></strong></p>
+            </div>
+            <table class="table table-striped" data-total-funds="<?php echo $group->funds->count()  ?>" data-funds-loaded="0" data-group-value="0" data-group-profit="0">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>Name</th>
+                        <th class="value-heading">Last price</th>
+                        <th class="value-heading">Cost</th>
+                        <th class="value-heading">Value</th>
+                        <th class="value-heading">3 months</th>
+                        <th class="value-heading">6 months</th>
+                        <th class="value-heading">12 months</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                {% for fund in funds %}
+                {% set firstBuy = fund.transactions.order('date asc').first() %}
+                    <tr class="fund-row loading" data-group-id="{{group.id}}" data-fund-id="{{fund.id}}">
+                        <td class="value-cell fund-name">
+                            <a href="{{fund.apiUrl}}" target="_blank">{{fund.title}}</a>
+                        </td>
+                        <td class="value-cell last-price"><small>loading...</small></td>
+                        <td class="value-cell cost">{{fund.balance | currency('GBP') }}</td>
+                        <td class="value-cell">
+                            <div class="value"></div>
+                            <p><small>Since {{ firstBuy.date }}</small></p>
+                        </td>
+                        <td class="value-cell three-months"></td>
+                        <td class="value-cell six-months"></td>
+                        <td class="value-cell twelve-months"></td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        {% endfor %}
+
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/js/jquery.tablesorter.js"></script>
+    <script src="/js/app.js"></script>
+  </body>
+</html>

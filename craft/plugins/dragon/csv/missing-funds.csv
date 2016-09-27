@@ -1,0 +1,5 @@
+fundId,title,unitsHeld,notes,investmentGroup,investmentType,apiProvider,apiId,currency,priceUnits,lastValue
+36,"Old Mutual UK Alpha Class U1 - Accumulation (GBP)",0.0000,"Ended up with a fair bit of this, sold as a pre-EU referendum hedge to buy some Gold instead","group: Darren ISA","fund",hargreavesLansdown,FJCDO,GBP,0,0.00
+38,"Standard Life UK Equity Unconstrained Institutional Class - Accumulation (GBP)",2451.7020,"","group: Darren ISA","fund",hargreavesLansdown,FTP12,GBP,0,0.00
+41,"Lindsell Train Global Equity Class D - Income (GBP)",2174.8080,"","group: Darren ISA","fund",hargreavesLansdown,FK6WV,GBP,0,0.00
+63,"Legg Mason IF Royce US Smaller Companies Class X - Accumulation (GBP) ",2078.8060,"","group: Darren ISA","fund",hargreavesLansdown,FGVDH,GBP,0,0.00
