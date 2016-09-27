@@ -84,11 +84,4 @@ class YahooFinance extends HargreavesLansdown {
         $this->liveData->m6 = $this->percentageValue($this->liveData->sell_price, $results[$key]->Close);
 
     }
-
-    protected function percentageValue($today,$then)
-    {
-        $value = (($today / $then) -1) * 100;
-        return $value;
-    }
-
 }

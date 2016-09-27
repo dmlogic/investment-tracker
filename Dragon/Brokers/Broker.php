@@ -98,4 +98,10 @@ abstract class Broker {
         ];
     }
 
+    protected function percentageValue($today,$then)
+    {
+        $value = (($today / $then) -1) * 100;
+        return $value;
+    }
+
 }

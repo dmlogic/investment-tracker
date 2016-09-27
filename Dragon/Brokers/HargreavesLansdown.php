@@ -32,8 +32,36 @@ class HargreavesLansdown extends Broker {
         if(!$this->investment->apiId) {
             return;
         }
-        $this->getXmlData();
 
+        if(filter_var($this->investment->apiId,FILTER_VALIDATE_URL,['flags' => [FILTER_FLAG_SCHEME_REQUIRED, FILTER_FLAG_HOST_REQUIRED, FILTER_FLAG_PATH_REQUIRED, FILTER_FLAG_QUERY_REQUIRED]])) {
+            $this->getHistoryFromChartJson();
+        } else {
+            $this->getHistoryFromScrape();
+        }
+
+    }
+
+    protected function getHistoryFromChartJson()
+    {
+        $response = $this->connector->get($this->investment->apiId);
+        $source = utf8_encode($response->getBody()->__toString());
+        $data = json_decode($source);
+        $snapshots = array_reverse($data->quotes);
+        $total = count($snapshots);
+
+        if(count($snapshots) < 13) {
+            return;
+        }
+        $this->liveData->m3 = $this->percentageValue($this->liveData->sell_price, $snapshots[12]->close);
+        if(count($snapshots) < 26) {
+            return;
+        }
+        $this->liveData->m6 = $this->percentageValue($this->liveData->sell_price, $snapshots[25]->close);
+        if(count($snapshots) < 52) {
+            return;
+        }
+        $m12Data = array_pop($snapshots);
+        $this->liveData->m12 = $this->percentageValue($this->liveData->sell_price, $m12Data->close);
     }
 
     /**
@@ -85,7 +113,7 @@ class HargreavesLansdown extends Broker {
     /**
      * Generate a request to financialexpress and parse the result
      */
-    protected function getXmlData()
+    protected function getHistoryFromScrape()
     {
 
         if($this->investment->investmentType->value !== 'fund') {
@@ -138,5 +166,12 @@ class HargreavesLansdown extends Broker {
         return sprintf('<?xml version="1.0" encoding="utf-16"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">'.
                '<soap:Body><Performance xmlns="http://localhost/ClientsV21/Hargreaves/Webservices/Charting.asmx"><TypeCodes>%s</TypeCodes><PriceType>TR</PriceType><MethodType>1</MethodType><PageNo>1</PageNo><PageSize>0</PageSize><Filter></Filter><Sort></Sort></Performance></soap:Body>'.
                '</soap:Envelope>',$this->investment->apiId);
+    }
+
+    protected function remove_utf8_bom($text)
+    {
+        $bom = pack('H*','EFBBBF');
+        $text = preg_replace("/^$bom/", '', $text);
+        return $text;
     }
 }
