@@ -2,7 +2,7 @@
 
 namespace Dragon\Brokers;
 
-use Dmlogic\DataItem;
+use StdClass;
 use Symfony\Component\DomCrawler\Crawler;
 
 class Fidelity extends Broker {
@@ -14,12 +14,12 @@ class Fidelity extends Broker {
      */
     protected function lookupData()
     {
-        $this->liveData = new DataItem;
-        $this->liveData->type       = $this->investment['type'];
-        $this->liveData->name       = $this->investment['name'];
-        $this->liveData->cost_price = $this->investment['cost_price'];
-        $this->liveData->currency   = $this->investment['currency'];
-        $this->liveData->units_held = $this->investment['units_held'];
+        $this->liveData = new StdClass;
+        $this->liveData->type       = $this->investment->investmentType->value;
+        $this->liveData->name       = $this->investment->title;
+        $this->liveData->cost_price = $this->investment->totalCost();
+        $this->liveData->currency   = $this->investment->currency;
+        $this->liveData->units_held = $this->investment->unitsHeld;
 
         $this->getCrawledData();
 
@@ -42,9 +42,9 @@ class Fidelity extends Broker {
             ]
         ];
 
-        $response = $this->connector->get($this->investment['url'],$options);
-        $html = $response->getBody()->__toString();
-        $this->parseHTML($html);
+        $response = $this->connector->get($this->investment->apiUrl,$options);
+        $this->html = $response->getBody()->__toString();
+        $this->parseHTML();
     }
 
     /**
@@ -53,9 +53,9 @@ class Fidelity extends Broker {
      *
      * @param  string $html
      */
-    protected function parseHTML($html)
+    protected function parseHTML()
     {
-        $crawler = new Crawler($html);
+        $crawler = new Crawler($this->html);
         $change = $crawler->filter('#daychange1')->first();
         if(false === strpos($change->attr('class'), 'Loss') ) {
             $changeDirection = 'up';
@@ -71,5 +71,23 @@ class Fidelity extends Broker {
         $this->liveData->last_price     = $price;
         $this->liveData->last_change    = $change;
         $this->liveData->last_direction = $changeDirection;
+
+        $this->liveData->m3 =  $this->lookupCell('3 Months',$crawler);
+        $this->liveData->m6 =  $this->lookupCell('6 Months',$crawler);
+        $this->liveData->m12 =  $this->lookupCell('1 Year',$crawler);
+    }
+
+    protected function lookupCell($label,$crawler)
+    {
+        $crawler = $crawler->filter('#col2 table tbody tr');
+
+        foreach($crawler as $row) {
+            if(strpos($row->nodeValue, $label) === false) {
+                continue;
+            }
+            return $row->childNodes[1]->nodeValue;
+        }
+
+        return null;
     }
 }
