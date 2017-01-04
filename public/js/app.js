@@ -6,7 +6,8 @@ loadFund = function(parent) {
         success: function(resp) {
             renderFund(parent,resp);
         },
-        dataType: "json"
+        dataType: "json",
+        async: false
     }).done(function() {
         $( this ).removeClass( "loading" );
     });
