@@ -1,9 +1,15 @@
-.loading small {
+.refreshing {
+    display:none;
+}
+
+.loading .refreshing {
+    display:inline-block;
     background-image:url(../images/loading.svg);
     background-repeat:no-repeat;
     padding-left:50px;
     color:#b0b0b0;
 }
+
 .last-price {
     color:#4baac7;
 }
@@ -46,4 +52,12 @@
 }
 .group-summary {
     display:none;
+}
+
+.error td {
+    background:#F8E5E5;
+}
+
+.stale td {
+    background:#E4E4E4;
 }

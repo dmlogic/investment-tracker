@@ -20,6 +20,7 @@
 
         {% for group in craft.entries.section('groups') %}
         {% set funds = craft.entries.section('investments').relatedTo(group) %}
+        <div class="fund-group">
             <h2 class="group-heading">{{group.title}}</h2>
             <div class="group-summary">
                 <p>Total group value: <strong class="group-value">{{group.balance | currency('GBP') }}</strong></p>
@@ -41,15 +42,24 @@
 
                 {% for fund in funds %}
                 {% set firstBuy = fund.transactions.order('date asc').first() %}
-                    <tr class="fund-row loading" data-group-id="{{group.id}}" data-fund-id="{{fund.id}}">
+                    <tr class="fund-row pending" data-group-id="{{group.id}}" data-fund-id="{{fund.id}}">
                         <td class="value-cell fund-name">
                             <a href="{{fund.apiUrl}}" target="_blank">{{fund.title}}</a>
+                            <p>
+                                <small class="last-checked"></small>
+                            </p>
+                            <p>
+                                <small class="refreshing">refreshing...</small>
+                            </p>
                         </td>
-                        <td class="value-cell last-price"><small>loading...</small></td>
-                        <td class="value-cell cost">{{fund.balance | currency('GBP') }}</td>
+                        <td class="value-cell last-price"></td>
+                        <td class="value-cell cost">
+                            {{fund.balance | currency('GBP') }}
+                            <p><small>Since {{ firstBuy.date }}</small></p>
+                        </td>
                         <td class="value-cell">
                             <div class="value"></div>
-                            <p><small>Since {{ firstBuy.date }}</small></p>
+
                         </td>
                         <td class="value-cell three-months"></td>
                         <td class="value-cell six-months"></td>
@@ -59,6 +69,7 @@
 
                 </tbody>
             </table>
+        </div>
         {% endfor %}
 
     </div>
