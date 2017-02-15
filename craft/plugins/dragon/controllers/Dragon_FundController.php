@@ -56,6 +56,9 @@ class Dragon_FundController extends BaseController
             case 'morningStar':
                 $class = '\Dragon\Brokers\MorningStar';
                 break;
+            case 'cellarWatch':
+                $class = '\Dragon\Brokers\CellarWatch';
+                break;
             default:
                 throw new HttpException(500, 'Invalid broker');
         }
