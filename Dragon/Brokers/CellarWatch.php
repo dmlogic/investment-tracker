@@ -1,17 +1,4 @@
 <?php
-/**
-https://www.cellar-watch.com/chart/fusionchartxmldata.do?
-    _=1475830397068
-    &ajaxReq=1
-    &series=0%7C1007475%7C1996
-    &timescale=60
-    &colors=0064c8
-    &rebase=false
-    &type=5yr
-    &startTime=1317977597065
-    &endTime=1475830397065
-
- */
 namespace Dragon\Brokers;
 
 use DateTime;
