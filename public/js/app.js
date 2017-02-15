@@ -7,14 +7,19 @@ processGroup = function(group){
     })
 }
 
-loadFundFromStorage = function(fund) {
-    raw = localStorage.getItem("fund"+fund.data('fund-id'));
-    if(!raw) {
+loadFundFromAttributes = function(fund) {
+    value  = parseFloat(fund.data('fund-value'));
+    if(!value) {
+        fund.addClass("error")
         return;
     }
-    renderFund(fund,JSON.parse(raw),false);
+    cost   = parseFloat(fund.data('fund-cost'));
+    setLastChecked(fund.data('fund-checked'),fund);
+    profit = value - cost;
+    setProfitLoss(fund.data('fund-value'),profit,fund);
     fund.find('.stale-date').text("Stale");
     fund.addClass("stale");
+    updateGroup(fund,value,profit);
 }
 
 loadFund = function(parent) {
@@ -51,26 +56,34 @@ renderFund = function(parent,data,shouldUpdate) {
         changeStr += ' ('+data.last_change+'%)';
     }
     parent.find('.last-price').html(changeStr);
-    valueStr = '£'+formatNumber(data.value)+'<br><span class="profit';
-    profit = parseFloat(data.profit);
+    setLastChecked(data.date,parent);
+    setProfitLoss(data.value,parseFloat(data.profit),parent);
+
+    parent.find('.three-months').html(renderPerformance(data.m3));
+    parent.find('.six-months').html(renderPerformance(data.m6));
+    parent.find('.twelve-months').html(renderPerformance(data.m12));
+
+    if(shouldUpdate) {
+        updateGroup(parent,data.value,data.profit);
+    }
+}
+
+setLastChecked = function(date,parent) {
+    dateObj = new Date(date);
+    dateStr = 'Last checked: '+String(date).substring(0,10)+' at '+pad(dateObj.getUTCHours())+':'+pad(dateObj.getUTCMinutes());
+    parent.find('.last-checked').html(dateStr);
+}
+
+setProfitLoss = function(value,profit,parent) {
+    valueStr = '£'+formatNumber(value)+'<br><span class="profit';
     if(profit < 1) {
         profit = profit * -1;
         valueStr += ' loss">(-';
     } else {
         valueStr += '">(';
     }
-    dateObj = new Date(data.date);
-    dateStr = 'Last checked: '+String(data.date).substring(0,10)+' at '+pad(dateObj.getUTCHours())+':'+pad(dateObj.getUTCMinutes());
     valueStr += '£'+formatNumber(profit)+')</span>'
     parent.find('.value').html(valueStr);
-    parent.find('.three-months').html(renderPerformance(data.m3));
-    parent.find('.six-months').html(renderPerformance(data.m6));
-    parent.find('.twelve-months').html(renderPerformance(data.m12));
-    parent.find('.last-checked').html(dateStr);
-
-    if(shouldUpdate) {
-        updateGroup(parent,data.value,data.profit);
-    }
 }
 
 updateGroup = function(fundRow,fundValue,fundProfit) {
@@ -110,6 +123,14 @@ updateGroup = function(fundRow,fundValue,fundProfit) {
     summary.slideDown();
 }
 
+resetGroup = function(group) {
+    groupTable = group.find('.table');
+
+    groupTable.data('funds-loaded',0);
+    groupTable.data('group-value',0);
+    groupTable.data('group-profit',0);
+}
+
 renderPerformance = function(value) {
     if(typeof(value) == "undefined" || value > 1000) {
         return '-';
@@ -126,24 +147,20 @@ renderPerformance = function(value) {
     return str;
 }
 
-function pad(val) {
+pad = function(val) {
     return String("00000" + val).slice(-2);
 }
 
-// loop each table
-    // loop each row (function needed)
-    // mark as loading
-    // lookup value
-    // save result to local storage
-    // process local storage for this result (function needed)
-    // mark as current
-
-// Then when we load the page we can mark everything as stale, loop every single row and grab from local storage
 
     $('.fund-row').each(function() {
-        loadFundFromStorage($(this));
+        loadFundFromAttributes($(this));
     })
     $('.fund-group').each(function(){
-        processGroup($(this));
+        resetGroup($(this));
+    })
+    $('.refresh').on("click",function(){
+        group = $(this).closest('.fund-group');
+        $(this).remove();
+        processGroup(group);
     })
 })();

@@ -22,6 +22,7 @@
         {% set funds = craft.entries.section('investments').relatedTo(group) %}
         <div class="fund-group">
             <h2 class="group-heading">{{group.title}}</h2>
+            <p><button class="refresh btn btn-primary">Refresh now</button></p>
             <div class="group-summary">
                 <p>Total group value: <strong class="group-value">{{group.balance | currency('GBP') }}</strong></p>
                 <p>Total group profit: <strong class="group-profit"></strong></p>
@@ -42,7 +43,13 @@
 
                 {% for fund in funds %}
                 {% set firstBuy = fund.transactions.order('date asc').first() %}
-                    <tr class="fund-row pending" data-group-id="{{group.id}}" data-fund-id="{{fund.id}}">
+                    <tr class="fund-row pending"
+                        data-group-id="{{group.id}}"
+                        data-fund-id="{{fund.id}}"
+                        data-fund-cost="{{fund.balance}}"
+                        data-fund-value="{{fund.lastValue}}"
+                        data-fund-checked="{{fund.lastValueDate | date('F d, Y H:i:s')}}">
+
                         <td class="value-cell fund-name">
                             <a href="{{fund.apiUrl}}" target="_blank">{{fund.title}}</a>
                             <p>
@@ -59,7 +66,6 @@
                         </td>
                         <td class="value-cell">
                             <div class="value"></div>
-
                         </td>
                         <td class="value-cell three-months"></td>
                         <td class="value-cell six-months"></td>
