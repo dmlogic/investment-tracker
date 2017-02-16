@@ -97,9 +97,15 @@ updateGroup = function(fundRow,fundValue,fundProfit) {
     }
 
     groupTable.tablesorter();
+
+
     gv = groupTable.data('group-value');
 
-    groupValue = '£'+formatNumber(gv);
+    if(groupTable.hasClass('share-options')) {
+        groupValue = 'None - options only';
+    } else {
+        groupValue = '£'+formatNumber(gv);
+    }
     groupProfit = groupTable.data('group-profit');
     profitStr = '<span class="';
     if(groupProfit < 0) {
@@ -121,7 +127,12 @@ updateGroup = function(fundRow,fundValue,fundProfit) {
 updateMightyTotal = function() {
     v = 0;
     $('.fund-group').each(function(i){
-        value = $(this).find('table').data('group-value');
+        t = $(this).find('table');
+        if(t.hasClass('share-options')) {
+            value = t.data('group-profit');
+        } else {
+            value = t.data('group-value');
+        }
         v += parseFloat(value);
     });
     m = $('#mighty');
@@ -133,6 +144,7 @@ incrementGroupValues = function(fundRow, fundValue, fundProfit) {
     groupTable = fundRow.closest('.table');
 
     loaded = parseInt(groupTable.data('funds-loaded')) +1;
+
     value = parseFloat(groupTable.data('group-value')) + fundValue;
     profit = parseFloat(groupTable.data('group-profit')) + fundProfit;
 

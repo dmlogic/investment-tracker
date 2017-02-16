@@ -15,6 +15,7 @@ class CraftPresenter {
 
     public function totalCost()
     {
+
         if(null !== $this->totalCost) {
             return $this->totalCost;
         }

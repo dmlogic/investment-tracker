@@ -29,7 +29,7 @@
             </div>
             <div class="group-content" id="group{{group.id}}">
                 <p><button class="refresh btn btn-primary">Refresh now</button></p>
-                <table class="table table-striped" data-total-funds="{{ funds | length }}" data-funds-loaded="0" data-group-value="0" data-group-profit="0">
+                <table class="table table-striped {{group.slug}}" data-total-funds="{{ funds | length }}" data-funds-loaded="0" data-group-value="0" data-group-profit="0">
                     <thead class="thead-inverse">
                         <tr>
                             <th>Name</th>
