@@ -1,5 +1,6 @@
 *.sql
 environment.php
+scratch.php
 todo.txt
 vendor
 craft/app

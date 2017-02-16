@@ -42,7 +42,7 @@ class CellarWatch extends Broker {
             ]
         ];
 
-        $then = new DateTime('-1 year');
+        $then = new DateTime('-5 year');
         $now = new DateTime();
 
         $query = http_build_query([
@@ -66,6 +66,11 @@ class CellarWatch extends Broker {
     protected function parseResponse($json)
     {
         $obj = json_decode($json)[0];
+        // foreach($obj->data as $key => $price) {
+        //     $dt = new \DateTime;
+        //     $dt->setTimestamp(substr($price->date,0,10));
+        //     dc($key.': '.$dt->format('Y-m-d').' : '.$price->value);
+        // }
 
         // 12 back is 3 months ago
         $m3Data = (isset($obj->data[40])) ? $obj->data[40] : null;
