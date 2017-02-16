@@ -97,8 +97,9 @@ updateGroup = function(fundRow,fundValue,fundProfit) {
     }
 
     groupTable.tablesorter();
+    gv = groupTable.data('group-value');
 
-    groupValue = '£'+formatNumber(groupTable.data('group-value'));
+    groupValue = '£'+formatNumber(gv);
     groupProfit = groupTable.data('group-profit');
     profitStr = '<span class="';
     if(groupProfit < 0) {
@@ -111,10 +112,21 @@ updateGroup = function(fundRow,fundValue,fundProfit) {
 
     group = fundRow.closest('.fund-group');
     summary = group.find('div.group-summary')
+    updateMightyTotal();
 
     summary.find('.group-value').html(groupValue);
     summary.find('.group-profit').html(profitStr);
-    summary.slideDown();
+}
+
+updateMightyTotal = function() {
+    v = 0;
+    $('.fund-group').each(function(i){
+        value = $(this).find('table').data('group-value');
+        v += parseFloat(value);
+    });
+    m = $('#mighty');
+    m.data('value',v);
+    m.find('strong').html('£'+formatNumber(v));
 }
 
 incrementGroupValues = function(fundRow, fundValue, fundProfit) {
@@ -161,16 +173,13 @@ showHide = function() {
     $("#"+$(this).data('sh')).toggle();
 }
 
-
     $('.fund-row').each(function() {
         loadFundFromAttributes($(this));
-    })
-    $('.fund-group').each(function(){
-        resetGroup($(this));
     })
     $('.refresh').on("click",function(){
         group = $(this).closest('.fund-group');
         $(this).remove();
+        resetGroup(group);
         processGroup(group);
     })
     $('.show-hide').on("click",showHide);
