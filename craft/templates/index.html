@@ -19,7 +19,7 @@
         <h1 class="display-4">Investment performance</h1>
 
         {% for group in craft.entries.section('groups') %}
-        {% set funds = craft.entries.section('investments').relatedTo(group) %}
+        {% set funds = craft.entries.section('investments').relatedTo(group).order('title') %}
         <div class="fund-group">
             <button class="btn btn-sm btn-success show-hide" data-sh="group{{group.id}}">Show/hide</button>
             <h2 class="group-heading">{{group.title}}</h2>
