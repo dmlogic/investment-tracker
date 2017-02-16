@@ -10,7 +10,8 @@ processGroup = function(group){
 loadFundFromAttributes = function(fund) {
     value  = parseFloat(fund.data('fund-value'));
     if(!value) {
-        fund.addClass("error")
+        fund.addClass("error");
+        incrementGroupValues(fund,0,0);
         return;
     }
     cost   = parseFloat(fund.data('fund-cost'));
@@ -87,15 +88,9 @@ setProfitLoss = function(value,profit,parent) {
 }
 
 updateGroup = function(fundRow,fundValue,fundProfit) {
+    incrementGroupValues(fundRow,fundValue,fundProfit);
+
     groupTable = fundRow.closest('.table');
-
-    loaded = parseInt(groupTable.data('funds-loaded'));
-    value = parseFloat(groupTable.data('group-value'));
-    profit = parseFloat(groupTable.data('group-profit'));
-
-    groupTable.data('funds-loaded',loaded + 1)
-    groupTable.data('group-value', value + fundValue);
-    groupTable.data('group-profit', profit + fundProfit);
 
     if(groupTable.data('funds-loaded') < groupTable.data('total-funds')) {
         return;
@@ -114,13 +109,24 @@ updateGroup = function(fundRow,fundValue,fundProfit) {
     }
     profitStr += '£'+formatNumber(groupProfit)+'</span>';
 
-    groupTable = fundRow.closest('.table');
-    summary = groupTable.prev('div.group-summary')
-
+    group = fundRow.closest('.fund-group');
+    summary = group.find('div.group-summary')
 
     summary.find('.group-value').html(groupValue);
     summary.find('.group-profit').html(profitStr);
     summary.slideDown();
+}
+
+incrementGroupValues = function(fundRow, fundValue, fundProfit) {
+    groupTable = fundRow.closest('.table');
+
+    loaded = parseInt(groupTable.data('funds-loaded')) +1;
+    value = parseFloat(groupTable.data('group-value')) + fundValue;
+    profit = parseFloat(groupTable.data('group-profit')) + fundProfit;
+
+    groupTable.data('funds-loaded',loaded)
+    groupTable.data('group-value', value );
+    groupTable.data('group-profit', profit );
 }
 
 resetGroup = function(group) {
@@ -151,6 +157,10 @@ pad = function(val) {
     return String("00000" + val).slice(-2);
 }
 
+showHide = function() {
+    $("#"+$(this).data('sh')).toggle();
+}
+
 
     $('.fund-row').each(function() {
         loadFundFromAttributes($(this));
@@ -163,4 +173,5 @@ pad = function(val) {
         $(this).remove();
         processGroup(group);
     })
+    $('.show-hide').on("click",showHide);
 })();

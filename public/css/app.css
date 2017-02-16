@@ -50,14 +50,20 @@
 .group-heading {
     margin-top:30px;
 }
-.group-summary {
-    display:none;
-}
-
 .error td {
     background:#F8E5E5;
 }
 
 .stale td {
     background:#E4E4E4;
+}
+.group-content {
+    display:none;
+}
+.show-hide {
+    float:right;
+    background-image:url(../images/eye.svg);
+    background-repeat:no-repeat;
+    background-position: 5px center ;
+    padding-left:30px;
 }

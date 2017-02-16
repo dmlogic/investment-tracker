@@ -21,61 +21,65 @@
         {% for group in craft.entries.section('groups') %}
         {% set funds = craft.entries.section('investments').relatedTo(group) %}
         <div class="fund-group">
+            <button class="btn btn-sm btn-success show-hide" data-sh="group{{group.id}}">Show/hide</button>
             <h2 class="group-heading">{{group.title}}</h2>
-            <p><button class="refresh btn btn-primary">Refresh now</button></p>
             <div class="group-summary">
-                <p>Total group value: <strong class="group-value">{{group.balance | currency('GBP') }}</strong></p>
+                <p>Total group value: <strong class="group-value"></strong></p>
                 <p>Total group profit: <strong class="group-profit"></strong></p>
             </div>
-            <table class="table table-striped" data-total-funds="<?php echo $group->funds->count()  ?>" data-funds-loaded="0" data-group-value="0" data-group-profit="0">
-                <thead class="thead-inverse">
-                    <tr>
-                        <th>Name</th>
-                        <th class="value-heading">Last price</th>
-                        <th class="value-heading">Cost</th>
-                        <th class="value-heading">Value</th>
-                        <th class="value-heading">3 months</th>
-                        <th class="value-heading">6 months</th>
-                        <th class="value-heading">12 months</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div class="group-content" id="group{{group.id}}">
+                <p><button class="refresh btn btn-primary">Refresh now</button></p>
+                <table class="table table-striped" data-total-funds="{{ funds | length }}" data-funds-loaded="0" data-group-value="0" data-group-profit="0">
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>Name</th>
+                            <th class="value-heading">Last price</th>
+                            <th class="value-heading">Cost</th>
+                            <th class="value-heading">Value</th>
+                            <th class="value-heading">3 months</th>
+                            <th class="value-heading">6 months</th>
+                            <th class="value-heading">12 months</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                {% for fund in funds %}
-                {% set firstBuy = fund.transactions.order('date asc').first() %}
-                    <tr class="fund-row pending"
-                        data-group-id="{{group.id}}"
-                        data-fund-id="{{fund.id}}"
-                        data-fund-cost="{{fund.balance}}"
-                        data-fund-value="{{fund.lastValue}}"
-                        data-fund-checked="{{fund.lastValueDate | date('F d, Y H:i:s')}}">
+                    {% for fund in funds %}
+                    {% set firstBuy = fund.transactions.order('date asc').first() %}
+                        <tr class="fund-row pending"
+                            data-group-id="{{group.id}}"
+                            data-fund-id="{{fund.id}}"
+                            data-fund-cost="{{fund.balance}}"
+                            data-fund-value="{{fund.lastValue}}"
+                            data-fund-checked="{{fund.lastValueDate | date('F d, Y H:i:s')}}">
 
-                        <td class="value-cell fund-name">
-                            <a href="{{fund.apiUrl}}" target="_blank">{{fund.title}}</a>
-                            <p>
-                                <small class="last-checked"></small>
-                            </p>
-                            <p>
-                                <small class="refreshing">refreshing...</small>
-                            </p>
-                        </td>
-                        <td class="value-cell last-price"></td>
-                        <td class="value-cell cost">
-                            {{fund.balance | currency('GBP') }}
-                            <p><small>Since {{ firstBuy.date }}</small></p>
-                        </td>
-                        <td class="value-cell">
-                            <div class="value"></div>
-                        </td>
-                        <td class="value-cell three-months"></td>
-                        <td class="value-cell six-months"></td>
-                        <td class="value-cell twelve-months"></td>
-                    </tr>
-                {% endfor %}
+                            <td class="value-cell fund-name">
+                                <a href="{{fund.apiUrl}}" target="_blank">{{fund.title}}</a>
+                                <p>
+                                    <small class="last-checked"></small>
+                                </p>
+                                <p>
+                                    <small class="refreshing">refreshing...</small>
+                                </p>
+                            </td>
+                            <td class="value-cell last-price"></td>
+                            <td class="value-cell cost">
+                                {{fund.balance | currency('GBP') }}
+                                <p><small>Since {{ firstBuy.date }}</small></p>
+                            </td>
+                            <td class="value-cell">
+                                <div class="value"></div>
+                            </td>
+                            <td class="value-cell three-months"></td>
+                            <td class="value-cell six-months"></td>
+                            <td class="value-cell twelve-months"></td>
+                        </tr>
+                    {% endfor %}
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
+        <hr>
         {% endfor %}
 
     </div>
