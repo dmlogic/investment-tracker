@@ -53,7 +53,12 @@
                             data-fund-checked="{{fund.lastValueDate | date('F d, Y H:i:s')}}">
 
                             <td class="value-cell fund-name">
+                                {%if 'http' in fund.apiUrl %}
                                 <a href="{{fund.apiUrl}}" target="_blank">{{fund.title}}</a>
+                                {% else %}
+                                {{fund.title}}
+                                {% endif %}
+
                                 <p>
                                     <small class="last-checked"></small>
                                 </p>
