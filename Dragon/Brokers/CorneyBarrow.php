@@ -5,9 +5,9 @@ use DateTime;
 use StdClass;
 use Symfony\Component\DomCrawler\Crawler;
 
-class CellarWatch extends Broker {
+class CorneyBarrow extends Broker {
 
-    const API_ENDPOINT = 'https://www.cellar-watch.com/chart/fusionchartxmldata.do';
+    const API_ENDPOINT = 'https://reserves.corneyandbarrow.com/api/wine_price_data.aspx';
 
     /**
      * Starts the crawl
@@ -35,7 +35,7 @@ class CellarWatch extends Broker {
     {
         $options = [
             'headers' => [
-                'Host'            => 'www.cellar-watch.com',
+                'Host'            => 'reserves.corneyandbarrow.com',
                 'User-Agent'      => static::USER_AGENT,
                 'DNT'             =>  '1',
                 'Connection'      => 'keep-alive',
@@ -46,15 +46,16 @@ class CellarWatch extends Broker {
         $now = new DateTime();
 
         $query = http_build_query([
-                'rebase'    => 'false',
-                'type'      => '1yr',
-                'startTime' => $then->getTimestamp(),
-                'endTime'   => $now->getTimestamp(),
-                'series'    => '0|'.$this->investment->apiUrl.'|'.$this->investment->apiId,
+                'wineId'          => $this->investment->apiUrl,
+                'vintage'         => $this->investment->apiId,
+                'showComparisons' => 'N',
+                'showPriceRange'  => 'N',
+                'dateRange'       => 12,
             ]);
         // exit(static::API_ENDPOINT.'?'.$query);
         $response = $this->connector->get(static::API_ENDPOINT.'?'.$query,$options);
         $this->parseResponse($response->getBody()->__toString());
+
     }
 
     /**
@@ -65,39 +66,44 @@ class CellarWatch extends Broker {
      */
     protected function parseResponse($json)
     {
-        $obj = json_decode($json)[0];
+        $prices = array_reverse( json_decode($json)->Prices );
+        // foreach($prices as $key => $price) {
+        //     $dt = new DateTime;
+        //     $dt->setTimestamp(substr($price[0],0,10));
+        //     dc($key.': '.$dt->format('Y-m-d').' : '.$this->myPrice($price[1]));
+        // }
 
-        // 12 back is 3 months ago
-        $m3Data = (isset($obj->data[40])) ? $obj->data[40] : null;
-        // 26 back is 6 months ago
-        $m6Data = (isset($obj->data[26])) ? $obj->data[26] : null;
-        // first is 12 months ago
-        $m12Data = array_shift($obj->data);
+        $valueNow = $this->myPrice($prices[1][1]);
 
-        // last is today (sell price)
-        $today = array_pop($obj->data);
-        $previous = array_pop($obj->data);
+        $this->liveData->sell_price = $prices[1][1];
+        $this->liveData->last_price = $valueNow;
+        $this->liveData->last_change  = number_format($this->percentageValue($valueNow, $this->myPrice($prices[2][1])) ,2);
 
-        $this->liveData->sell_price = $today->value;
-        $this->liveData->last_price = $today->value;
-        $this->liveData->last_change  = number_format($this->percentageValue($today->value, $previous->value) ,2);
         $changeDirection = '';
-        if($today->value > $previous->value) {
+        if($prices[1][1] > $prices[2][1]) {
             $changeDirection = 'up';
-        }elseif($today->value < $previous->value) {
+        }elseif($prices[1][1] < $prices[2][1]) {
             $changeDirection = 'down';
         }
         $this->liveData->last_direction = $changeDirection;
 
+        $m3Data  = (isset($prices[4]))  ? $this->myPrice($prices[4][1])  : null;
+        $m6Data  = (isset($prices[7]))  ? $this->myPrice($prices[7][1])  : null;
+        $m12Data = (isset($prices[13])) ? $this->myPrice($prices[13][1]) : null;
         if($m12Data) {
-            $this->liveData->m12 = $this->percentageValue($this->liveData->sell_price, $m12Data->value);
+            $this->liveData->m12 = $this->percentageValue($valueNow, $m12Data);
         }
         if($m3Data) {
-            $this->liveData->m3 = $this->percentageValue($this->liveData->sell_price, $m3Data->value);
+            $this->liveData->m3 = $this->percentageValue($valueNow, $m3Data);
         }
         if($m6Data) {
-            $this->liveData->m6 = $this->percentageValue($this->liveData->sell_price, $m6Data->value);
+            $this->liveData->m6 = $this->percentageValue($valueNow, $m6Data);
         }
+    }
+
+    protected function myPrice($price)
+    {
+        return (float) $price / $this->investment->priceUnits;
     }
 
 }
