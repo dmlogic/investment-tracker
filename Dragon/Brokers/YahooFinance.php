@@ -74,6 +74,8 @@ class YahooFinance extends HargreavesLansdown {
     {
         $results = $data->query->results->quote;
 
+        dd($results);
+
         $m3Data = array_shift($results);
         $m12Data = array_pop($results);
 

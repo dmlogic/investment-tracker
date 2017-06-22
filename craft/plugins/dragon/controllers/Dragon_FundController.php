@@ -47,6 +47,9 @@ class Dragon_FundController extends BaseController
             case 'hargreavesLansdown':
                 $class = '\Dragon\Brokers\HargreavesLansdown';
                 break;
+            case 'hargreavesMorningStar':
+                $class = '\Dragon\Brokers\HlMorningStar';;
+                break;
             case 'yahooFinance':
                 $class = '\Dragon\Brokers\YahooFinance';;
                 break;
