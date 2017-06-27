@@ -12,7 +12,7 @@ class HlMorningStar extends HargreavesLansdown {
      * Where to get historical chart data from
      */
 
-    const DATA_URL = 'http://tools.morningstar.co.uk/api/rest.svc/timeseries_ohlcv/t92wz0sj7c?currencyId=USD&idtype=Morningstar&frequency=daily&performanceType=&outputType=COMPACTJSON';
+    const DATA_URL = 'http://tools.morningstar.co.uk/api/rest.svc/timeseries_ohlcv/t92wz0sj7c?idtype=Morningstar&frequency=daily&performanceType=&outputType=COMPACTJSON';
 
     /**
      * Starts the crawl
@@ -40,8 +40,7 @@ class HlMorningStar extends HargreavesLansdown {
         $m6Date = (new DateTime('-6 months'));
         $m12Date = (new DateTime('-12 months'));
 
-        $query = sprintf('&startDate=%s&&id=%s',$m12Date->format('Y-m-d'),$this->investment->apiId);
-
+        $query = "&currencyId={$this->investment->currency}&startDate={$m12Date->format('Y-m-d')}&id={$this->investment->apiId}";
         $response = $this->connector->get(static::DATA_URL.$query,$this->getCurlOptions());
         $this->parseHistoricalMarkup(json_decode($response->getBody(),true),$m3Date->format('Y-m-d'),$m6Date->format('Y-m-d'),$m12Date->format('Y-m-d'));
     }
@@ -64,5 +63,14 @@ class HlMorningStar extends HargreavesLansdown {
                 continue;
             }
         }
+    }
+
+    protected function percentageValue($today,$then)
+    {
+        if(strpos($this->investment->apiId, 'multiply')) {
+           $bits = explode('multiply=',$this->investment->apiId);
+           $then = $then * end($bits);
+        }
+        return parent::percentageValue($today,$then);
     }
 }
