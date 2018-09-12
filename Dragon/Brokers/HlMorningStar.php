@@ -42,6 +42,7 @@ class HlMorningStar extends HargreavesLansdown {
 
         $query = "&currencyId={$this->investment->currency}&startDate={$m12Date->format('Y-m-d')}&id={$this->investment->apiId}";
         $response = $this->connector->get(static::DATA_URL.$query,$this->getCurlOptions());
+        // dc(static::DATA_URL.$query);
         $this->parseHistoricalMarkup(json_decode($response->getBody(),true),$m3Date->format('Y-m-d'),$m6Date->format('Y-m-d'),$m12Date->format('Y-m-d'));
     }
 

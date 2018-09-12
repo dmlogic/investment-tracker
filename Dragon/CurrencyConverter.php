@@ -2,6 +2,8 @@
 
 namespace Dragon;
 
+use GuzzleHttp\Client;
+
 class CurrencyConverter {
 
     private $from;
@@ -15,8 +17,15 @@ class CurrencyConverter {
 
     public function convert($value)
     {
-        $url = sprintf('http://api.fixer.io/latest?base=%s&symbols=%s',$this->from,$this->to);
-        $result = json_decode(file_get_contents($url),true);
-        return $value * $result['rates'][$this->to];
+        $url = sprintf('https://www.oanda.com/currency/converter/update?base_currency_0=%s&quote_currency=%s&end_date=2018-09-11&view=details&id=6&action=C&',$this->to,$this->from);
+        $options = [
+            'headers' => [
+                'X-Requested-With'  => 'XMLHttpRequest',
+            ],
+        ];
+        $guzzle = new Client;
+        $response = $guzzle->get($url,$options );
+        $result = json_decode($response->getBody()->__toString());
+        return $value * $result->data->bid_ask_data->bid;
     }
 }

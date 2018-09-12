@@ -95,13 +95,14 @@ class HargreavesLansdown extends Broker {
     protected function parseHTML($html)
     {
         $crawler = new Crawler($html);
-        $change = $crawler->filter('.change-percent')->first();
+
+        $change = $crawler->filter('.price > .row > .columns span.change')->last();
         if(0 === strpos($change->attr('class'), 'positive') ) {
             $changeDirection = 'up';
-        } elseif(0 === strpos($change->attr('class'), 'nochange') ) {
-            $changeDirection = '';
-        } else {
+        } elseif(0 === strpos($change->attr('class'), 'down') ) {
             $changeDirection = 'down';
+        } else {
+            $changeDirection = '';
         }
 
         $this->liveData->sell_price     = $this->plainNumber($crawler->filter('span.bid')->first()->text());

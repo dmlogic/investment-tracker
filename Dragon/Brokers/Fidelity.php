@@ -43,6 +43,7 @@ class Fidelity extends Broker {
         ];
 
         $response = $this->connector->get($this->investment->apiUrl,$options);
+        // dd($this->investment->apiUrl);
         $this->html = $response->getBody()->__toString();
         $this->parseHTML();
     }
@@ -85,7 +86,11 @@ class Fidelity extends Broker {
             if(strpos($row->nodeValue, $label) === false) {
                 continue;
             }
-            return $row->childNodes[1]->nodeValue;
+            foreach ($row->childNodes as $key => $child) {
+                if($key === 1) {
+                    return $child->nodeValue;
+                }
+            }
         }
 
         return null;

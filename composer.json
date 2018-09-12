@@ -10,6 +10,7 @@
     "require": {
         "guzzlehttp/guzzle": "^6.2",
         "symfony/css-selector": "3.*",
-        "symfony/dom-crawler": "3.*"
+        "symfony/dom-crawler": "3.*",
+        "laravel/homestead": "^7.12"
     }
 }
